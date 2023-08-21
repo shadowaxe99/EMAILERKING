@@ -1,30 +1,23 @@
-from flask import Flask, render_template, request
-from src.main import Main
-import threading
+from flask import Flask, render_template, request, jsonify
+from src.response_generator import ResponseGenerator
+from src.utils import Utils
 
 app = Flask(__name__)
-main = Main()
-thread = None
+response_generator = ResponseGenerator()
+utils = Utils()
 
 @app.route('/')
 def index():
     return render_template('index.html')
 
-@app.route('/start', methods=['POST'])
-def start():
-    global thread
-    if thread is None:
-        thread = threading.Thread(target=main.run)
-        thread.start()
-    return 'OK'
-
-@app.route('/stop', methods=['POST'])
-def stop():
-    global thread
-    if thread is not None:
-        thread.join()
-        thread = None
-    return 'OK'
+@app.route('/generate-response', methods=['POST'])
+def generate_response():
+    email = request.form.get('email')
+    if utils.validate_email(email):
+        response = response_generator.generate_response(email)
+        return jsonify({'response': response})
+    else:
+        return jsonify({'error': 'Invalid email address'})
 
 if __name__ == '__main__':
     app.run(debug=True)
