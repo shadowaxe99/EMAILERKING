@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Email Response System</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        $(document).ready(function(){
+            $('#start').click(function(){
+                $.post('/start', function(data){
+                    alert('System started.');
+                });
+            });
+            $('#stop').click(function(){
+                $.post('/stop', function(data){
+                    alert('System stopped.');
+                });
+            });
+        });
+    </script>
+</head>
+<body>
+    <h1>Email Response System</h1>
+    <button id="start">Start</button>
+    <button id="stop">Stop</button>
+</body>
+</html>
